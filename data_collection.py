@@ -6,9 +6,9 @@ from cv2.typing import MatLike
 import numpy as np
 import pandas as pd
 
-from helpers import millis
-from myo import setup_myo, stop_myo
-from video import VideoRecorder
+from script.helpers import millis
+from script.myo import setup_myo, stop_myo
+from script.video import VideoRecorder
 
 if __name__ == '__main__':
     # argument parsing & outputs
