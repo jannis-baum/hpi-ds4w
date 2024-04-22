@@ -19,9 +19,10 @@ if __name__ == '__main__':
     def path(component: str):
         return os.path.join(args.output, component)
 
-    # myo setup
+    # myo & data storage setup
     queue = setup_myo()
-    df = pd.DataFrame(columns=['millis', *[f'EMG{i}' for i in range(8)]])
+    df = pd.DataFrame(columns=['millis', 'frame', *[f'EMG{i}' for i in range(8)]])
+    frame_i = 0
 
     # plotting setup
     size = (480, 270)
@@ -33,13 +34,14 @@ if __name__ == '__main__':
                    # anything much over 1000
 
     def frame_handler(frame: MatLike) -> MatLike:
-        global plot; global prev_emgs
+        global plot; global prev_emgs; global frame_i
+        frame_i += 1
 
         emgs = None
         while not(queue.empty()):
             emgs = list(queue.get())
             time = millis()
-            df.loc[len(df)] = [time, *emgs]
+            df.loc[len(df)] = [time, frame_i, *emgs]
             print(('{:7}: ' + ' | '.join(['{:4}'] * 8)).format(time, *emgs))
 
         # shift plot to the left
