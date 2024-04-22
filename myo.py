@@ -3,12 +3,14 @@ import multiprocessing
 from pyomyo import Myo, emg_mode
 
 _queue = multiprocessing.Queue()
-def _worker(q):
+_exit_event = multiprocessing.Event()
+
+def _worker(queue, exit_event):
     myo = Myo(mode=emg_mode.PREPROCESSED)
     myo.connect()
 
     def add_to_queue(emg, movement):
-        q.put(emg)
+        queue.put(emg)
     myo.add_emg_handler(add_to_queue)
 
     def print_battery(bat):
@@ -18,10 +20,13 @@ def _worker(q):
     # vibrate to know we connected okay
     myo.vibrate(0.2)
 
-    while True:
+    while not exit_event.is_set():
         myo.run()
 
-def setup_myo() -> multiprocessing.Queue:
-    process = multiprocessing.Process(target=_worker, args=(_queue,))
+def stop_myo():
+    _exit_event.set()
+
+def setup_myo():
+    process = multiprocessing.Process(target=_worker, args=(_queue, _exit_event))
     process.start()
     return _queue
