@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 import os
+import cv2
 
 from cv2.typing import MatLike
 import numpy as np
@@ -26,17 +27,37 @@ if __name__ == '__main__':
     size = (480, 270)
     plot = np.zeros((*size[::-1], 3), np.uint8)
     step = 3
+    prev_emgs: list | None = None
+    emg_max = 1500 # emg values are unpacked from a 16 byte unsigned int so
+                   # technically it could go to 2^16 but i haven't seen
+                   # anything much over 1000
 
     def frame_handler(frame: MatLike) -> MatLike:
-        global plot
-        plot = np.roll(plot, -step, axis=1)
-        plot[:, -step:, :] = 255
+        global plot; global prev_emgs
 
+        emgs = None
         while not(queue.empty()):
-            emg = list(queue.get())
+            emgs = list(queue.get())
             time = millis()
-            df.loc[len(df)] = [time, *emg]
-            print(('{:7}: ' + ' | '.join(['{:4}'] * 8)).format(time, *emg))
+            df.loc[len(df)] = [time, *emgs]
+            print(('{:7}: ' + ' | '.join(['{:4}'] * 8)).format(time, *emgs))
+
+        plot = np.roll(plot, -step, axis=1)
+        plot[:, -step:, :] = 0
+        if emgs:
+            for i, emg in enumerate(emgs):
+                height = int(size[1] / len(emgs))
+                y_origin = height * i
+                cv2.line(plot, (0, y_origin), (size[0], y_origin), (255, 255, 255), 1)
+                if prev_emgs:
+                    x1 = size[0]
+                    x0 = x1 - step
+                    y_o_inverse = y_origin + height
+                    y0 = y_o_inverse - int(prev_emgs[i] / emg_max * height)
+                    y1 = y_o_inverse - int(emg / emg_max * height)
+                    cv2.line(plot, (x0, y0), (x1, y1), (255, 190, 115), 2)
+            prev_emgs = emgs
+
         return np.concatenate((plot, frame), axis=0)
 
     rec = VideoRecorder(frame_handler, path('video.mp4'), resize=size, out_size=(size[0], size[1] * 2))
