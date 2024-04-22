@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 import multiprocessing
 
 import pandas as pd
@@ -9,22 +10,26 @@ q = multiprocessing.Queue()
 def worker(q):
     m = Myo(mode=emg_mode.PREPROCESSED)
     m.connect()
-    
+
     def add_to_queue(emg, movement):
         q.put(emg)
     m.add_emg_handler(add_to_queue)
-    
+
     def print_battery(bat):
         print('Battery level:', bat)
     m.add_battery_handler(print_battery)
 
     # vibrate to know we connected okay
     m.vibrate(0.2)
-    
+
     while True:
         m.run()
 
 if __name__ == '__main__':
+    parser = ArgumentParser()
+    parser.add_argument('output', type=str)
+    args = parser.parse_args()
+
     p = multiprocessing.Process(target=worker, args=(q,))
     p.start()
 
@@ -41,4 +46,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Quitting')
 
-    df.to_csv('data.csv', index=False)
+    df.to_csv(f'{args.output}.csv', index=False)
