@@ -1,3 +1,4 @@
+import os
 import time
 
 from IPython.display import Markdown, display
@@ -20,26 +21,37 @@ def millis():
     return _current_time() - _initial_time
 
 # ------------------------------------------------------------------------------
-# MARK: ugly data loading functions --------------------------------------------
+# MARK: data loading functions -------------------------------------------------
 
-# get data for 1 person on 1 day
-def get_data_1p(person: str, date: str = '0423'):
-    path = f'data/{date}/{person}/data_labelled.csv'
+__data_dir = 'data'
+DataSet = tuple[pd.DataFrame, pd.Series, pd.Series]
+
+# get data for 1 person on 1 date
+def read_labelled(person: str, date: str) -> DataSet:
+    path = os.path.join(__data_dir, date, person, 'data_labelled.csv')
     with open(path, 'r') as fp:
         data_raw = pd.read_csv(fp)
 
-    X = data_raw[[f'EMG{i}' for i in range(8)]]
-    holds = data_raw['hold']
+    X = pd.DataFrame(data_raw[[f'EMG{i}' for i in range(8)]])
+    holds = pd.Series(data_raw['hold'])
     names = pd.Series([person] * len(holds))
     return X, holds, names
 
-# get concatenated data for multiple people on 1 day
-def get_data(people: list[str] = ['jonas', 'gregor', 'nikolai', 'jannis'], date: str = '0423'):
-    return (
-        pd.concat(col).reset_index(drop=True) for col in zip(*[
-            get_data_1p(name, date) for name in people
-        ])
-    )
+# get concatenated data for multiple people/dates
+def get_data(people: list[str] | None = None, dates: list[str] | None = None) -> DataSet:
+    data_sets = list[DataSet]()
+
+    for date in os.listdir(__data_dir):
+        date_path = os.path.join(__data_dir, date)
+        if not os.path.isdir(date_path) or (dates is not None and date not in dates): continue
+
+        for person in os.listdir(date_path):
+            if people is not None and person not in people: continue
+            try:
+                data_sets.append(read_labelled(person, date))
+            except: continue
+
+    return tuple(pd.concat(col).reset_index(drop=True) for col in zip(*data_sets)) # type: ignore
 
 # ------------------------------------------------------------------------------
 # MARK: evaluation -------------------------------------------------------------
