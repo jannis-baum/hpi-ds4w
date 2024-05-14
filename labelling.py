@@ -23,11 +23,11 @@ if __name__ == '__main__':
             with open(data_path, 'r') as fp:
                 data = pd.read_csv(fp)
             
-            data['hold'] = None
-            data['details'] = None
-            for _, row in bounds.iterrows():
+            data['hold'] = 'idle'
+            data['rep'] = None
+            for i, row in bounds.iterrows():
                 condition = (data['frame'] >= row['frame_start']) & (data['frame'] <= row['frame_end'])
                 data.loc[condition, 'hold'] = row['hold']
-                data.loc[condition, 'details'] = row['details']
+                data.loc[condition, 'rep'] = i
 
             data.to_csv(os.path.join(recording_path, 'data_labelled.csv'), index=False)

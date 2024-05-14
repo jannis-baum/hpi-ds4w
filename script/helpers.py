@@ -24,12 +24,12 @@ def millis():
 
 # get data for 1 person on 1 day
 def get_data_1p(person: str, date: str = '0423'):
-    path = f'data/{date}/{person}-hangboard/data_labelled.csv'
+    path = f'data/{date}/{person}/data_labelled.csv'
     with open(path, 'r') as fp:
         data_raw = pd.read_csv(fp)
 
     X = data_raw[[f'EMG{i}' for i in range(8)]]
-    holds = data_raw['hold'] + '_' + data_raw['details']
+    holds = data_raw['hold']
     names = pd.Series([person] * len(holds))
     return X, holds, names
 
