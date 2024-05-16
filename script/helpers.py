@@ -35,6 +35,7 @@ def read_labelled(person: str, date: str) -> DataSet:
     X = pd.DataFrame(data_raw[[f'EMG{i}' for i in range(8)]])
     y = pd.DataFrame(data_raw[['hold', 'rep']])
     y['name'] = [person] * len(data_raw)
+    y['date'] = [date] * len(data_raw)
     return X, y
 
 # get concatenated data for multiple people/dates
