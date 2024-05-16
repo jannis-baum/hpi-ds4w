@@ -6,10 +6,11 @@ Overview of files:
   data & video for labelling
 - [`labelling.py`](labelling.py) uses a CSV of manually annotated frame
   boundaries to create labelled data
+- [`aggregate_data.py`](aggregate_data.py) aggregates labelled data into one CSV
+  file
 - [`tsne.ipynb`](tsne.ipynb) runs t-SNE dimensionality reduction to visualize
   labelled data
-- [`rf-all.ipynb`](rf-all.ipynb) trains a Random Forest classifier for holds on
-  a given split of all data and evaluates it
-- [`rf-omitting-person.ipynb`](rf-omitting-person.ipynb) trains a Random Forest
-  classifier for holds on all but one person and then evaluates it on the person
-  it has never seen
+- [`rf-classifier.ipynb`](rf-all.ipynb) example of using a Random Forest to
+  classify holds
+- [`feasibility-study.ipynb`](feasibility-study.ipynb) hypothesis testing on
+  sensor distributions for different holds
