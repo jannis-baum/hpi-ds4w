@@ -24,7 +24,7 @@ def millis():
 # MARK: data loading functions -------------------------------------------------
 
 __data_dir = 'data'
-DataSet = tuple[pd.DataFrame, pd.Series, pd.Series]
+DataSet = tuple[pd.DataFrame, pd.DataFrame]
 
 # get data for 1 person on 1 date
 def read_labelled(person: str, date: str) -> DataSet:
@@ -33,9 +33,9 @@ def read_labelled(person: str, date: str) -> DataSet:
         data_raw = pd.read_csv(fp)
 
     X = pd.DataFrame(data_raw[[f'EMG{i}' for i in range(8)]])
-    holds = pd.Series(data_raw['hold'])
-    names = pd.Series([person] * len(holds))
-    return X, holds, names
+    y = pd.DataFrame(data_raw[['hold', 'rep']])
+    y['name'] = [person] * len(data_raw)
+    return X, y
 
 # get concatenated data for multiple people/dates
 def get_data(people: list[str] | None = None, dates: list[str] | None = None) -> DataSet:
