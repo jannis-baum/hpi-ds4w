@@ -1,12 +1,7 @@
 import os
 import time
 
-from IPython.display import Markdown, display
-import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.metrics import ConfusionMatrixDisplay
-from sklearn.metrics import accuracy_score
-
 
 # ------------------------------------------------------------------------------
 # MARK: data recording stuff ---------------------------------------------------
@@ -53,17 +48,3 @@ def get_data(people: list[str] | None = None, dates: list[str] | None = None) ->
             except: continue
 
     return tuple(pd.concat(col).reset_index(drop=True) for col in zip(*data_sets)) # type: ignore
-
-# ------------------------------------------------------------------------------
-# MARK: evaluation -------------------------------------------------------------
-
-def report_cm(title, y_true, y_pred, classifier):
-    display(Markdown(f'# {title}'))
-    print(f'accuracy: {accuracy_score(y_true, y_pred)}')
-    ConfusionMatrixDisplay.from_predictions(
-        y_true, y_pred,
-        labels=classifier.classes_,
-        normalize='true',
-        xticks_rotation='vertical'
-    )
-    plt.show()
