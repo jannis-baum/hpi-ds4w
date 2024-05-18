@@ -31,7 +31,8 @@ def pretty_hm(
         cmap=cmap, xticklabels=False, yticklabels=False,
         annot=annot, fmt='.0f',
         square=True, linecolor='white', linewidths=0.5,
-        cbar=True, mask=up_triang, cbar_kws={'shrink': 0.6, 'pad': 0.02, 'label': legend}
+        mask=up_triang,
+        cbar=True if legend else False, cbar_kws={'shrink': 0.6, 'pad': 0.02, 'label': legend}
     )
     ax.invert_xaxis()
     for i, label in enumerate(labels):
