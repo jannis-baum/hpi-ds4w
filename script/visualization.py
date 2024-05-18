@@ -1,3 +1,5 @@
+import os
+
 from IPython.display import Markdown, display
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,3 +44,11 @@ def pretty_hm(
 # (capitalize first letter & make underscores into spaces)
 def pretty_str(string):
     return (string[0].upper() + string[1:]).replace('_', ' ')
+
+# save current figure as pdf for use in latex
+def savefig_pdf(name):
+    fig_dir = 'figures'
+    os.makedirs(fig_dir, exist_ok=True)
+    pdf_path = os.path.join(fig_dir, f'{name}.pdf')
+
+    plt.savefig(pdf_path, bbox_inches='tight')
