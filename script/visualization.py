@@ -37,3 +37,8 @@ def pretty_hm(
     ax.invert_xaxis()
     for i, label in enumerate(labels):
         ax.text(i + 0.2, i + 0.5, label, ha='right', va='center')
+
+# transform internal labels into presentable labels
+# (capitalize first letter & make underscores into spaces)
+def pretty_str(string):
+    return (string[0].upper() + string[1:]).replace('_', ' ')
