@@ -23,11 +23,10 @@ if __name__ == '__main__':
             with open(data_path, 'r') as fp:
                 data = pd.read_csv(fp)
             
-            data['hold'] = 'idle'
-            data['rep'] = None
+            aggregated = pd.DataFrame(columns=[*data.columns, 'hold', 'rep'])
+
             for i, row in bounds.iterrows():
                 condition = (data['frame'] >= row['frame_start']) & (data['frame'] <= row['frame_end'])
-                data.loc[condition, 'hold'] = row['hold']
-                data.loc[condition, 'rep'] = i
+                aggregated.loc[len(aggregated)] = [*data[condition].mean(), row['hold'], i]
 
-            data.to_csv(os.path.join(recording_path, 'data_labelled.csv'), index=False)
+            aggregated.to_csv(os.path.join(recording_path, 'data_labelled.csv'), index=False)
