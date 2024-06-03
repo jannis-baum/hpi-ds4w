@@ -1,14 +1,22 @@
 from argparse import ArgumentParser
 import os
-import cv2
+import time
 
+import cv2
 from cv2.typing import MatLike
 import numpy as np
 import pandas as pd
 
-from script.helpers import millis
 from script.myo import setup_myo, stop_myo
 from script.video import VideoRecorder
+
+# time keeping
+def _current_time():
+    return round(time.time() * 1000)
+_initial_time = _current_time()
+# milliseconds since startup
+def _millis():
+    return _current_time() - _initial_time
 
 emg_cols = [f'EMG_{i}' for i in range(8)]
 
@@ -42,7 +50,7 @@ if __name__ == '__main__':
         emgs = None
         while not(queue.empty()):
             emgs = list(queue.get())
-            time = millis()
+            time = _millis()
             df.loc[len(df)] = [time, frame_i, *emgs]
             print(('{:7}: ' + ' | '.join(['{:4}'] * 8)).format(time, *emgs))
 
