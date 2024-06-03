@@ -10,6 +10,8 @@ from script.helpers import millis
 from script.myo import setup_myo, stop_myo
 from script.video import VideoRecorder
 
+emg_cols = [f'EMG_{i}' for i in range(8)]
+
 if __name__ == '__main__':
     # argument parsing & outputs
     parser = ArgumentParser()
@@ -21,7 +23,7 @@ if __name__ == '__main__':
 
     # myo & data storage setup
     queue = setup_myo()
-    df = pd.DataFrame(columns=['millis', 'frame', *[f'EMG{i}' for i in range(8)]])
+    df = pd.DataFrame(columns=['millis', 'frame', *emg_cols])
     frame_i = 0
 
     # plotting setup
