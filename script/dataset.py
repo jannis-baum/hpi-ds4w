@@ -2,15 +2,16 @@ import os
 
 import pandas as pd
 
-# ------------------------------------------------------------------------------
-# MARK: data loading functions -------------------------------------------------
+data_dir = 'data'
+dataset_path = os.path.join(data_dir, 'dataset.csv')
+emg_cols = [f'EMG_{i}' for i in range(8)]
+emg_cols_cal = [f'{col}_cal' for col in emg_cols]
 
-__data_dir = 'data'
 DataSet = tuple[pd.DataFrame, pd.DataFrame]
 
 # get data for 1 person on 1 date
 def read_labelled(person: str, date: str) -> DataSet:
-    path = os.path.join(__data_dir, date, person, 'data_labelled.csv')
+    path = os.path.join(data_dir, date, person, 'data_labelled.csv')
     with open(path, 'r') as fp:
         data_raw = pd.read_csv(fp)
 
@@ -24,8 +25,8 @@ def read_labelled(person: str, date: str) -> DataSet:
 def get_data(people: list[str] | None = None, dates: list[str] | None = None) -> DataSet:
     data_sets = list[DataSet]()
 
-    for date in os.listdir(__data_dir):
-        date_path = os.path.join(__data_dir, date)
+    for date in os.listdir(data_dir):
+        date_path = os.path.join(data_dir, date)
         if not os.path.isdir(date_path) or (dates is not None and date not in dates): continue
 
         for person in os.listdir(date_path):

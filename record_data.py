@@ -7,6 +7,7 @@ from cv2.typing import MatLike
 import numpy as np
 import pandas as pd
 
+from script.dataset import emg_cols
 from script.myo import setup_myo, stop_myo
 from script.video import VideoRecorder
 
@@ -17,8 +18,6 @@ _initial_time = _current_time()
 # milliseconds since startup
 def _millis():
     return _current_time() - _initial_time
-
-emg_cols = [f'EMG_{i}' for i in range(8)]
 
 if __name__ == '__main__':
     # argument parsing & outputs

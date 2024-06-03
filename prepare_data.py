@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from record_data import emg_cols
+from script.dataset import data_dir, dataset_path, emg_cols, emg_cols_cal
 
 # anonymize people's names to integers
 _person2int = dict[str, int]()
@@ -28,15 +28,14 @@ def _get_means(bounds, data) -> tuple[str, pd.Series]:
     return (bounds['label'], data.loc[condition, emg_cols].mean())
 
 if __name__ == '__main__':
-    data_dir = 'data'
     dataset = pd.DataFrame(columns=[
         'person',       # anonymized person identifier
         'date',         # recording date
         'recording',    # recording index for given date
         'set',          # set index in given recording
         'hold',         # climbing hold
-        *emg_cols,     # absolute sensor data
-        *[f'{col}_cal' for col in emg_cols], # calibrated sensor data
+        *emg_cols,      # absolute sensor data
+        *emg_cols_cal,  # calibrated sensor data
     ])
 
     for day_name in os.listdir(data_dir):
@@ -87,4 +86,4 @@ if __name__ == '__main__':
                 ]
                 set_index += 1
 
-    dataset.to_csv(os.path.join(data_dir, 'dataset.csv'), index=False)
+    dataset.to_csv(dataset_path)
