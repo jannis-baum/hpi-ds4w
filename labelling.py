@@ -13,13 +13,18 @@ if __name__ == '__main__':
             recording_path = os.path.join(day_path, recording)
             if not os.path.isdir(recording_path): continue
             
-            bounds_path = os.path.join(recording_path, 'frame_boundaries.csv')
-            data_path = os.path.join(recording_path, 'data.csv')
-            if not os.path.exists(bounds_path):
+            # get bounds as csv or xlsx
+            bounds: None | pd.DataFrame = None
+            for extension, reader in [('csv', pd.read_csv), ('xlsx', pd.read_excel)]:
+                bounds_path = os.path.join(recording_path, f'frame_boundaries.{extension}')
+                if os.path.exists(bounds_path):
+                    bounds = reader(bounds_path)
+                    break
+            if bounds is None:
                 print(f'Frame boundary definitions for {recording_path} missing, skipping.')
                 continue
-            with open(bounds_path, 'r') as fp:
-                bounds = pd.read_csv(fp)
+
+            data_path = os.path.join(recording_path, 'data.csv')
             with open(data_path, 'r') as fp:
                 data = pd.read_csv(fp)
             
