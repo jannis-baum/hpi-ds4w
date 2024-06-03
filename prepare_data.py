@@ -3,6 +3,7 @@ import os
 import pandas as pd
 
 from script.dataset import data_dir, dataset_path, emg_cols, emg_cols_cal
+from script.visualization import pretty_str
 
 # anonymize people's names to integers
 _person2int = dict[str, int]()
@@ -50,7 +51,7 @@ if __name__ == '__main__':
         for person in os.listdir(day_path):
             recording_path = os.path.join(day_path, person)
             if not os.path.isdir(recording_path): continue
-            person_id = _anonymize(person)
+            person_id = f'Person #{_anonymize(person)}'
 
             try:
                 bounds = _get_frame_boundaries(recording_path)
@@ -80,7 +81,7 @@ if __name__ == '__main__':
                     day,
                     recording,
                     set_index,
-                    hold,
+                    pretty_str(hold),
                     *means,
                     *list(means - calibration)
                 ]
