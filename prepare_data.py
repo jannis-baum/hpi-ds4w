@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from data_collection import emg_cols
+from record_data import emg_cols
 
 # anonymize people's names to integers
 _person2int = dict[str, int]()
