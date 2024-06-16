@@ -1,6 +1,9 @@
+import json
 import os
 
 import pandas as pd
+
+from definitions import features_path
 
 data_dir = 'data'
 dataset_path = os.path.join(data_dir, 'dataset.csv')
@@ -16,3 +19,7 @@ def get_data(calibrated = True) -> DataSet:
     X = dataset[emg_cols_cal if calibrated else emg_cols]
     y = dataset[label_cols]
     return (X, y)
+
+def get_feature_list():
+    with open(features_path, 'r') as fp:
+        return json.load(fp)
