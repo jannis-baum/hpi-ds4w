@@ -63,9 +63,6 @@ if __name__ == '__main__':
             with open(data_path, 'r') as fp:
                 data = pd.read_csv(fp)
 
-            aggregated = pd.DataFrame(columns=[*data.columns, 'hold', 'rep'])
-
-
             if 'calibration' not in list(bounds['label']):
                 print(f'Calibration period missing for {recording_path}, skipping.')
                 continue
