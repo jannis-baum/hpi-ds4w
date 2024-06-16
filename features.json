@@ -9,7 +9,7 @@
                 "nfreq": 256
             },
             "n_features": "nfreq",
-            "use": "yes"
+            "use": "no"
         },
         "Fundamental frequency": {
             "complexity": "log",
@@ -29,7 +29,7 @@
                 "fs": 100
             },
             "n_features": 1,
-            "use": "yes",
+            "use": "no",
             "tag": "inertial"
         },
         "LPCC": {
@@ -40,7 +40,7 @@
                 "n_coeff": 12
             },
             "n_features": "n_coeff",
-            "use": "yes",
+            "use": "no",
             "tag": "audio"
         },
         "MFCC": {
@@ -110,7 +110,7 @@
                 "fs": 100
             },
             "n_features": 1,
-            "use": "yes",
+            "use": "no",
             "tag": "audio"
         },
         "Spectral decrease": {
@@ -121,7 +121,7 @@
                 "fs": 100
             },
             "n_features": 1,
-            "use": "yes"
+            "use": "no"
         },
         "Spectral distance": {
             "complexity": "log",
@@ -203,7 +203,7 @@
                 "fs": 100
             },
             "n_features": 1,
-            "use": "yes"
+            "use": "no"
         },
         "Spectral spread": {
             "complexity": "linear",
@@ -318,7 +318,7 @@
                 "d": 10
             },
             "n_features": "d",
-            "use": "yes"
+            "use": "no"
         },
         "ECDF Percentile": {
             "complexity": "log",
@@ -338,7 +338,7 @@
                 "percentile": "[0.2, 0.8]"
             },
             "n_features": "percentile",
-            "use": "yes"
+            "use": "no"
         },
         "Entropy": {
             "complexity": "log",
@@ -360,7 +360,7 @@
                 "r": 1
             },
             "n_features": "nbins",
-            "use": "yes"
+            "use": "no"
         },
         "Interquartile range": {
             "complexity": "constant",
@@ -481,7 +481,7 @@
                 "fs": 100
             },
             "n_features": 1,
-            "use": "yes"
+            "use": "no"
         },
         "Autocorrelation": {
             "complexity": "linear",
@@ -510,7 +510,7 @@
                 "threshold": null
             },
             "n_features": 1,
-            "use": "no"
+            "use": "yes"
         },
         "Mean absolute diff": {
             "complexity": "constant",
@@ -550,7 +550,7 @@
             "function": "tsfel.negative_turning",
             "parameters": "",
             "n_features": 1,
-            "use": "yes",
+            "use": "no",
             "tag": "emg"
         },
         "Neighbourhood peaks": {
@@ -569,7 +569,7 @@
             "function": "tsfel.positive_turning",
             "parameters": "",
             "n_features": 1,
-            "use": "yes",
+            "use": "no",
             "tag": "emg"
         },
         "Signal distance": {
@@ -578,7 +578,7 @@
             "function": "tsfel.distance",
             "parameters": "",
             "n_features": 1,
-            "use": "yes"
+            "use": "no"
         },
         "Slope": {
             "complexity": "log",
@@ -586,7 +586,7 @@
             "function": "tsfel.slope",
             "parameters": "",
             "n_features": 1,
-            "use": "yes"
+            "use": "no"
         },
         "Sum absolute diff": {
             "complexity": "constant",
@@ -594,7 +594,7 @@
             "function": "tsfel.sum_abs_diff",
             "parameters": "",
             "n_features": 1,
-            "use": "yes"
+            "use": "no"
         },
         "Zero crossing rate": {
             "complexity": "constant",
@@ -602,7 +602,7 @@
             "function": "tsfel.zero_cross",
             "parameters": "",
             "n_features": 1,
-            "use": "yes",
+            "use": "no",
             "tag": [
                 "audio",
                 "emg"
