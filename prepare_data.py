@@ -3,7 +3,6 @@ import os
 import pandas as pd
 
 from script.dataset import data_dir, dataset_path, emg_cols, emg_cols_cal
-from script.visualization import pretty_str
 
 # anonymize people's names to integers
 _person2int = dict[str, int]()
@@ -23,18 +22,16 @@ def _get_frame_boundaries(recording_path: str) -> pd.DataFrame:
             return reader(bounds_path)
     raise Exception(f'Frame boundary definitions for {recording_path} missing')
 
-# get means for values within row from bounds file
-def _get_means(bounds, data) -> tuple[str, pd.Series]:
+# get values within row from bounds file
+def _get_data(bounds, data) -> tuple[str, pd.DataFrame]:
     condition = (data['frame'] >= bounds['frame_start']) & (data['frame'] <= bounds['frame_end'])
-    return (bounds['label'], data.loc[condition, emg_cols].mean())
+    return (bounds['label'], data.loc[condition, emg_cols])
 
 if __name__ == '__main__':
     dataset = pd.DataFrame(columns=[
-        'person',       # anonymized person identifier
-        'date',         # recording date
-        'recording',    # recording index for given date
-        'set',          # set index in given recording
         'hold',         # climbing hold
+        'id',           # unique set identifier: {date}_{person}_{recording-i}_{set-i}
+        'time',         # time stamp for set
         *emg_cols,      # absolute sensor data
         *emg_cols_cal,  # calibrated sensor data
     ])
@@ -51,7 +48,7 @@ if __name__ == '__main__':
         for person in os.listdir(day_path):
             recording_path = os.path.join(day_path, person)
             if not os.path.isdir(recording_path): continue
-            person_id = f'Person #{_anonymize(person)}'
+            person_id = f'p{_anonymize(person)}'
 
             try:
                 bounds = _get_frame_boundaries(recording_path)
@@ -67,21 +64,24 @@ if __name__ == '__main__':
                 print(f'Calibration period missing for {recording_path}, skipping.')
                 continue
 
-            _, calibration = _get_means(bounds[bounds['label'] == 'calibration'].iloc[0], data)
+            calibration = _get_data(bounds[bounds['label'] == 'calibration'].iloc[0], data)[1].mean()
             set_index = 1
             for _, row in bounds.iterrows():
                 if row['label'] == 'calibration': continue
 
-                hold, means = _get_means(row, data)
-                dataset.loc[len(dataset)] = [
-                    person_id,
-                    day,
-                    recording,
-                    set_index,
-                    pretty_str(hold),
-                    *means,
-                    *list(means - calibration)
-                ]
+                hold, values = _get_data(row, data)
+                values['hold'] = hold
+                values['id'] = f'{day}_{person}_{recording}_{set_index}'
+                values['time'] = values.reset_index().index
+                values[emg_cols_cal] = values[emg_cols] - calibration
+
+                # reorder columns and concat with existing data
+                values = values[dataset.columns]
+                if dataset.empty:
+                    dataset = values
+                else:
+                    dataset = pd.concat([dataset, values])
+
                 set_index += 1
 
-    dataset.to_csv(dataset_path)
+    dataset.to_csv(dataset_path, index=False)
