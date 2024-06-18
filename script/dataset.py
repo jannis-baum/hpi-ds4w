@@ -7,17 +7,21 @@ from definitions import features_path
 
 data_dir = 'data'
 dataset_path = os.path.join(data_dir, 'dataset.csv')
-emg_cols = [f'EMG_{i}' for i in range(8)]
-emg_cols_cal = [f'{col}_cal' for col in emg_cols]
 
-# X (EMG data), y (labels)
-DataSet = tuple[pd.DataFrame, pd.DataFrame]
+col_hold = 'hold'
+col_id = 'id'
+col_time = 'time'
+cols_emg = [f'EMG_{i}' for i in range(8)]
+cols_emg_cal = [f'{col}_cal' for col in cols_emg]
 
-def get_data(calibrated = True) -> DataSet:
+# X (id, time, EMG data), y (hold labels)
+DataSet = tuple[pd.DataFrame, pd.Series]
+
+def get_data() -> DataSet:
     dataset = pd.read_csv(dataset_path)
-    label_cols = [col for col in dataset.columns if col not in emg_cols + emg_cols_cal]
-    X = dataset[emg_cols_cal if calibrated else emg_cols]
-    y = dataset[label_cols]
+    X = pd.DataFrame(dataset[[col_id, col_time, *cols_emg, *cols_emg_cal]])
+    y = pd.Series(dataset[col_hold]).set_axis(dataset[col_id])
+    y = pd.Series(y[~y.index.duplicated(keep='first')])
     return (X, y)
 
 def get_feature_list():

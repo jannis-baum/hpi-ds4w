@@ -2,7 +2,9 @@ import os
 
 import pandas as pd
 
-from script.dataset import data_dir, dataset_path, emg_cols, emg_cols_cal
+from script.dataset import \
+        data_dir, dataset_path, \
+        cols_emg, cols_emg_cal, col_hold, col_id, col_time
 
 # anonymize people's names to integers
 _person2int = dict[str, int]()
@@ -25,15 +27,15 @@ def _get_frame_boundaries(recording_path: str) -> pd.DataFrame:
 # get values within row from bounds file
 def _get_data(bounds, data) -> tuple[str, pd.DataFrame]:
     condition = (data['frame'] >= bounds['frame_start']) & (data['frame'] <= bounds['frame_end'])
-    return (bounds['label'], data.loc[condition, emg_cols])
+    return (bounds['label'], data.loc[condition, cols_emg])
 
 if __name__ == '__main__':
     dataset = pd.DataFrame(columns=[
-        'hold',         # climbing hold
-        'id',           # unique set identifier: {date}_{person}_{recording-i}_{set-i}
-        'time',         # time stamp for set
-        *emg_cols,      # absolute sensor data
-        *emg_cols_cal,  # calibrated sensor data
+        col_hold,         # climbing hold
+        col_id,           # unique set identifier: {date}_{person}_{recording-i}_{set-i}
+        col_time,         # time stamp for set
+        *cols_emg,      # absolute sensor data
+        *cols_emg_cal,  # calibrated sensor data
     ])
 
     for day_name in os.listdir(data_dir):
@@ -70,10 +72,10 @@ if __name__ == '__main__':
                 if row['label'] == 'calibration': continue
 
                 hold, values = _get_data(row, data)
-                values['hold'] = hold
-                values['id'] = f'{day}_{person}_{recording}_{set_index}'
-                values['time'] = values.reset_index().index
-                values[emg_cols_cal] = values[emg_cols] - calibration
+                values[col_hold] = hold
+                values[col_id] = f'{day}_{person}_{recording}_{set_index}'
+                values[col_time] = values.reset_index().index
+                values[cols_emg_cal] = values[cols_emg] - calibration
 
                 # reorder columns and concat with existing data
                 values = values[dataset.columns]

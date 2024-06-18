@@ -7,7 +7,7 @@ from cv2.typing import MatLike
 import numpy as np
 import pandas as pd
 
-from script.dataset import emg_cols
+from script.dataset import cols_emg
 from script.myo import setup_myo, stop_myo
 from script.video import VideoRecorder
 
@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     # myo & data storage setup
     queue = setup_myo()
-    df = pd.DataFrame(columns=['millis', 'frame', *emg_cols])
+    df = pd.DataFrame(columns=['millis', 'frame', *cols_emg])
     frame_i = 0
 
     # plotting setup
