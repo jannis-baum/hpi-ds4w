@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
                 hold, values = _get_data(row, data)
                 values[col_hold] = hold
-                values[col_id] = f'{day}_{person}_{recording}_{set_index}'
+                values[col_id] = f'{day}_{person_id}_{recording}_{set_index}'
                 values[col_time] = values.reset_index().index
                 values[cols_emg_cal] = values[cols_emg] - calibration
 
