@@ -8,12 +8,12 @@ from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import accuracy_score
 
 # confusion matrix
-def report_cm(title, y_true, y_pred, classifier):
+def report_cm(title, y_true, y_pred, classes):
     display(Markdown(f'# {title}'))
     print(f'accuracy: {accuracy_score(y_true, y_pred)}')
     ConfusionMatrixDisplay.from_predictions(
         y_true, y_pred,
-        labels=classifier.classes_,
+        labels=classes,
         normalize='true',
         xticks_rotation='vertical'
     )
