@@ -1,11 +1,9 @@
-import json
 import os
 
 import pandas as pd
 
-from definitions import features_path
+from definitions import data_dir
 
-data_dir = 'data'
 dataset_path = os.path.join(data_dir, 'dataset.csv')
 
 col_hold = 'hold'

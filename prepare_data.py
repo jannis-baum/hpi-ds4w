@@ -2,9 +2,15 @@ import os
 
 import pandas as pd
 
-from script.dataset import \
-        data_dir, dataset_path, \
-        cols_emg, cols_emg_cal, col_hold, col_id, col_time
+from definitions import data_dir
+from script.dataset import (
+    col_hold,
+    col_id,
+    col_time,
+    cols_emg,
+    cols_emg_cal,
+    dataset_path,
+)
 
 # anonymize people's names to integers
 _person2int = dict[str, int]()
