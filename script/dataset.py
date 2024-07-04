@@ -9,6 +9,7 @@ data_dir = 'data'
 dataset_path = os.path.join(data_dir, 'dataset.csv')
 
 col_hold = 'hold'
+# id is '{day}_{person_id}_{recording}_{set_index}'
 col_id = 'id'
 col_time = 'time'
 cols_emg = [f'EMG_{i}' for i in range(8)]
