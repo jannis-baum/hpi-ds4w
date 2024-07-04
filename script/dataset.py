@@ -28,7 +28,3 @@ def get_data() -> DataSet:
 # extract information from id column
 def get_id_col(X: pd.DataFrame, col) -> pd.Series:
     return X['id'].str.split('_', expand=True)[col]
-
-def get_feature_list():
-    with open(features_path, 'r') as fp:
-        return json.load(fp)
