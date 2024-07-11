@@ -1,5 +1,7 @@
 import os
+
 import pandas as pd
+
 from definitions import data_dir
 
 dataset_path = os.path.join(data_dir, 'dataset.csv')
