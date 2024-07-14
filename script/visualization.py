@@ -7,6 +7,8 @@ import seaborn as sns
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import accuracy_score
 
+from definitions import fig_dir
+
 # confusion matrix
 def report_cm(title, y_true, y_pred, classes):
     display(Markdown(f'# {title}'))
@@ -47,7 +49,6 @@ def pretty_str(string):
 
 # save current figure as pdf for use in latex
 def savefig_pdf(name):
-    fig_dir = 'figures'
     os.makedirs(fig_dir, exist_ok=True)
     pdf_path = os.path.join(fig_dir, f'{name}.pdf')
 

@@ -9,3 +9,4 @@ def _establish_dir(name: str) -> str:
 
 data_dir = _establish_dir('data')
 model_dir = _establish_dir('model-saves')
+fig_dir = _establish_dir('figures')
